@@ -34,3 +34,10 @@ Built with FreeRTOS tasks and a custom thread-safe data wrapper.
 RAM:   [=         ]   6.7% (used 22096 bytes from 327680 bytes)
 Flash: [==        ]  24.0% (used 315013 bytes from 1310720 bytes)
 ```
+
+## Todo
+- Render current date on the display
+- Implement mini-interface with multiple buttons for simple control
+- Add alarms module
+- Protect `was_pressed` with `core::locked<T>`
+- Update time over WIFI
