@@ -3,27 +3,34 @@
 class DHTModule
 {
 public:
-    explicit DHTModule(uint8_t pin, uint8_t type)
+    explicit DHTModule(const uint8_t pin, const int8_t type)
         : pin(pin), type(type), dht(pin, type)
     {
     }
 
-    void begin()
+    void setup()
     {
         dht.begin();
+
+        temperature.init();
+        humidity.init();
     }
 
     inline void update()
     {
-        const auto t = dht.readTemperature();
-        const auto h = dht.readHumidity();
+        if (const auto v = dht.readTemperature(); !isnan(v))
+        {
+            temperature.set(v);
+        }
 
-        temperature = isnan(t) ? temperature : t;
-        humidity = isnan(h) ? humidity : h;
+        if (const auto v = dht.readHumidity(); !isnan(v))
+        {
+            humidity.set(v);
+        }
     }
 
-    float temperature = 0.f;
-    float humidity = 0.f;
+    core::locked<float> temperature{0.f};
+    core::locked<float> humidity{0.f};
 
 private:
     uint8_t pin = 0u;

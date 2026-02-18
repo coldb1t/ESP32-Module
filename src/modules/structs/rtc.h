@@ -80,8 +80,21 @@ private:
 class RTCModule
 {
 public:
-    [[nodiscard]] bool begin()
+    RTCModule() {};
+    ~RTCModule()
     {
+        if (device)
+        {
+            delete device;
+        }
+    }
+    [[nodiscard]] bool setup()
+    {
+        if (device)
+        {
+            return false;
+        }
+
         device = new Adafruit_I2CDevice(DS1307_ADDRESS, &Wire);
         return device->begin();
     }
@@ -126,8 +139,8 @@ private:
         return buffer[0];
     }
 
-    [[nodiscard]] static uint8_t bin2bcd(const uint8_t val) { return val + 6 * (val / 10); }
-    [[nodiscard]] static uint8_t bcd2bin(const uint8_t val) { return val - 6 * (val >> 4); }
+    [[nodiscard]] inline uint8_t bin2bcd(const uint8_t val) { return val + 6 * (val / 10); }
+    [[nodiscard]] inline uint8_t bcd2bin(const uint8_t val) { return val - 6 * (val >> 4); }
 
-    Adafruit_I2CDevice *device;
+    Adafruit_I2CDevice *device = nullptr;
 };
